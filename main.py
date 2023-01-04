@@ -51,16 +51,17 @@ async def process_start_command(message: types.Message):
 
 @dp.message_handler()
 async def echo_message(message: types.Message, state: FSMContext):
-	if message.text == '💎 Главное меню':
+	# измененно
+	if message.text == '⚠️ Главное меню':
 		await message.answer(config.main_text, reply_markup=MainKeyboards.inline_user_kb)
 	if message.text == "🌝 Здесь может быть реклама 🌝":
-		await message.answer("Какой то рекламный текст.\nЕсли что писать сюда: @KevinMertence")
+		await message.answer("Какой то рекламный текст.\nЕсли что писать сюда: @nikonych")
 	if message.text == "📝 Правила":
 		await message.answer(config.rules, reply_markup=OtherKeyboards.inline_close_kb)
 
 	# ADMINS
 
-	if message.text == "💌 Сделать рассылку" and message.from_user.id in config.admins:
+	if message.text == "📤 Сделать рассылку" and message.from_user.id in config.admins:
 		await state.set_state('send_all')
 		await message.answer("\nБот использует HTML теги для форматирования текста.\n" \
 							 "Пример: <b>текст</b> даст вам *текст*\n\n" \
@@ -76,7 +77,7 @@ async def echo_message(message: types.Message, state: FSMContext):
 @dp.message_handler(state='send_all')
 async def send_all(message, state: FSMContext):
 	buttons = [
-	    types.InlineKeyboardButton(text="💌 Отправить", callback_data="send"),
+	    types.InlineKeyboardButton(text="📤 Отправить", callback_data="send"),
 	    types.InlineKeyboardButton(text="❌ Отмена", callback_data="cancel"),
 	]
 
@@ -89,7 +90,7 @@ async def send_all(message, state: FSMContext):
 @dp.message_handler(content_types=['photo'], state='send_all')
 async def send_all(message: types.Message, state: FSMContext):
 	buttons = [
-	    types.InlineKeyboardButton(text="💌 Отправить", callback_data="send"),
+	    types.InlineKeyboardButton(text="📤 Отправить", callback_data="send"),
 	    types.InlineKeyboardButton(text="❌ Отмена", callback_data="cancel"),
 	]
 
@@ -184,7 +185,8 @@ async def delete_buttons(callback_query: types.CallbackQuery, state: FSMContext)
 @dp.callback_query_handler(lambda call: call.data == 'send_logs' )
 async def back(callback_query: types.CallbackQuery, state: FSMContext):
 	await state.update_data(services_list=await config.get_all_services())
-	await callback_query.message.edit_text("Выберите сервисы, которые вы хотите чтоб мы отработали:", parse_mode="HTML", reply_markup=await generateFilterKeyboard(config.services))
+	# измененно
+	await callback_query.message.edit_text("Выберите сервисы которые мы должны отработать:", parse_mode="HTML", reply_markup=await generateFilterKeyboard(config.services))
 	await state.set_state('get_filter')
 
 @dp.callback_query_handler(text_startswith="service:", state='get_filter')
@@ -198,7 +200,6 @@ async def gg(call: types.CallbackQuery, state: FSMContext):
 		user_data[service_taped] = 1
 
 	await state.update_data(services_list=user_data)
-
 	await call.message.edit_text("Выберите сервисы, которые мы отработали:", parse_mode="HTML", reply_markup=await generateFilterKeyboard(user_data))
 
 
@@ -230,8 +231,9 @@ async def scan_message(message: types.Message, state: FSMContext):
 							caption=text, reply_markup=OtherKeyboards.inline_checklog_kb, parse_mode="HTML")
 	await db.addLogs(user_id, payment, date)
 	await db.addOneLog(user_id)
+	# измененно
 	await message.reply(f"Логи <b>№{logs_id}</b> были успешно отправлены!\n"
-						f"Скоро ваши логи проверят и начислят вам баланс деньги.", parse_mode="HTML",
+						f"Ожидайте проверки ваших логов", parse_mode="HTML",
 						reply_markup=OtherKeyboards.inline_back_kb)
 	await state.finish()
 
@@ -258,8 +260,9 @@ async def echo_message(message: types.Message, state: FSMContext):
 
 		await db.addLogs(user_id, payment, date)
 		await db.addOneLog(user_id)
+		# измененно
 		await message.reply(f"Логи <b>№{logs_id}</b> были успешно отправлены!\n"
-							f"Скоро ваши логи проверят и начислят вам баланс деньги.", parse_mode="HTML",
+							f"Ожидайте проверки ваших логов", parse_mode="HTML",
 							reply_markup=OtherKeyboards.inline_back_kb)
 	else:
 		await message.reply("Неправильно введена ссылка на файлообменник.\nПопробуйте еще раз.", parse_mode="HTML",

@@ -4,15 +4,16 @@ import config
 
 
 class MainKeyboards:
-    main_but = KeyboardButton('💎 Главное меню')
+    # измененно
+    main_but = KeyboardButton('⚠️ Главное меню')
     ad_but = KeyboardButton('🌝 Здесь может быть реклама 🌝')
     rules_but = KeyboardButton('📝 Правила')
 
     user_kb = ReplyKeyboardMarkup(resize_keyboard=True)
     user_kb.row(main_but, rules_but)
     user_kb.add(ad_but)
-
-    sendall_but = KeyboardButton('💌 Сделать рассылку')
+    # измененно
+    sendall_but = KeyboardButton('📤 Сделать рассылку')
     stats_but = KeyboardButton('📊 Посмотреть статистику')
 
     admin_kb = ReplyKeyboardMarkup(resize_keyboard=True)
@@ -20,9 +21,9 @@ class MainKeyboards:
     admin_kb.add(ad_but)
     admin_kb.row(sendall_but,stats_but)
 
-
-    profile_but = InlineKeyboardButton('👩‍🚀 Профиль', callback_data='profile')
-    send_logs_but = InlineKeyboardButton('🚀 Отправить логи', callback_data='send_logs')
+    # измененно
+    profile_but = InlineKeyboardButton('👨🏻 Профиль', callback_data='profile')
+    send_logs_but = InlineKeyboardButton('📤 Отправить логи', callback_data='send_logs')
     sent_logs_but = InlineKeyboardButton('🗂 Отправленные логи', callback_data='history_logs')
     help_but = InlineKeyboardButton('🆘 Поддержка', callback_data='help')
 
@@ -34,7 +35,8 @@ class MainKeyboards:
 
 
 class OtherKeyboards:
-    inline_cancel_but = InlineKeyboardButton('◀️ Отмена', callback_data='cancel')
+    # измененно
+    inline_cancel_but = InlineKeyboardButton('↩️️ Отмена', callback_data='cancel')
     inline_cancel_kb = InlineKeyboardMarkup(resize_keyboard=True)
     inline_cancel_kb.add(inline_cancel_but)
 
@@ -42,11 +44,11 @@ class OtherKeyboards:
     inline_close_kb = InlineKeyboardMarkup(resize_keyboard=True)
     inline_close_kb.add(inline_close_but)
 
-    inline_back_but = InlineKeyboardButton('◀️ Назад', callback_data='back')
+    inline_back_but = InlineKeyboardButton('↩️ Назад', callback_data='back')
     inline_back_kb = InlineKeyboardMarkup(resize_keyboard=True)
     inline_back_kb.add(inline_back_but)
 
-    back_but = KeyboardButton('◀️ Назад', callback_data='back')
+    back_but = KeyboardButton('↩️ Назад', callback_data='back')
     back_kb = ReplyKeyboardMarkup(resize_keyboard=True)
     back_kb.add(back_but)
 
@@ -78,7 +80,8 @@ async def generateHistory(history):
                 kk = '✅'
             kb.add(InlineKeyboardButton(f"№{j[0]} | {j[2]} руб. | {j[3].split()[0]} | {kk}", callback_data='hui'))
     else:
-        kb.add(InlineKeyboardButton(f"Вы не отправляли логи", callback_data='hui'))
+        # измененно
+        kb.add(InlineKeyboardButton(f"Нет отправленных логов", callback_data='hui'))
 
     kb.add(OtherKeyboards.inline_back_but)
     return kb
