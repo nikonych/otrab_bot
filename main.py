@@ -7,7 +7,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import Dispatcher, FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, \
-	ReplyKeyboardRemove
+	ReplyKeyboardRemove, ParseMode
 from aiogram.utils import executor
 
 import keyboards
@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.INFO)
 
 # инициализируем бота
 storage = MemoryStorage()
-bot = Bot(token=config.API_TOKEN)
+bot = Bot(token=config.API_TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=storage)
 
 # инициализируем соединение с БД
@@ -55,7 +55,7 @@ async def echo_message(message: types.Message, state: FSMContext):
 	if message.text == '⚠️ Главное меню':
 		await message.answer(config.main_text, reply_markup=MainKeyboards.inline_user_kb)
 	if message.text == "🌝 Здесь может быть реклама 🌝":
-		await message.answer("Какой то рекламный текст.\nЕсли что писать сюда: @nikonych")
+		await message.answer("Какой то рекламный текст.\nЕсли что писать сюда: @Nikonoon")
 	if message.text == "📝 Правила":
 		await message.answer(config.rules, reply_markup=OtherKeyboards.inline_close_kb)
 
@@ -217,7 +217,10 @@ async def scan_message(message: types.Message, state: FSMContext):
 	user_id = message.from_user.id
 	payment = 0
 	date = datetime.datetime.today()
-	logs_id = await db.getLastLogs() + 1
+	try:
+		logs_id = await db.getLastLogs(message.from_user.id) + 1
+	except:
+		logs_id = 0
 	services = (await state.get_data())['services_list']
 	text = f'<b>ID-{logs_id}\n' \
 		   f'Логи пользователя @{message.from_user.username}\n' \

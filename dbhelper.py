@@ -36,6 +36,7 @@ class SQLighter:
     async def getLastLogs(self, user_id):
         with self.connection:
             result = self.cursor.execute('SELECT `id` FROM `logs_history` WHERE `user_id` = ?', (user_id,)).fetchall()
+            print(result)
             return result[-1][0]
 
     async def editBalance(self, user_id, balance):
@@ -57,6 +58,7 @@ class SQLighter:
     async def get_logs_user_id(self, id):
         with self.connection:
             result = self.cursor.execute('SELECT `user_id` FROM `logs_history` WHERE `id` = ?', (id,)).fetchall()
+            print(result)
             return result[-1][0]
 
     async def get_user_sent_logs(self, user_id):
