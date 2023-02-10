@@ -288,12 +288,16 @@ async def have_balance(callback_query: types.CallbackQuery, state: FSMContext):
 
 @dp.message_handler(state='wait_for_balance')
 async def echo_message(message: types.Message, state: FSMContext):
-	howmany = int(message.text)
+	if message.text.isdigit():
+		howmany = int(message.text)
+	else:
+		await state.set_state("wait_for_balance")
+		return
 	logs_id = (await state.get_data())['logs_id']
 	used_id = await db.get_logs_user_id(logs_id)
 	await db.editBalance(used_id, howmany)
 	await db.updateLogs(logs_id, howmany, 1)
-	await bot.send_message(used_id, text = f"Ваши логи №{logs_id} успешно проверены.\n"
+	await bot.send_message(used_id, text=f"Ваши логи №{logs_id} успешно проверены.\n"
 										   f"Вам начисленно: {howmany} руб.")
 	await message.reply("Баланс добавлен пользователю.")
 	await state.finish()
